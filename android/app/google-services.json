@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "630983934073",
+    "project_id": "gvchat-2abd2",
+    "storage_bucket": "gvchat-2abd2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630983934073:android:51aaee98db3ed99ba894a8",
+        "android_client_info": {
+          "package_name": "com.greetvilla.gvchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630983934073-3jd6scr87114bh58823lvne5l3qvml79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqEUvC3daSQriPYx1GduyDLJSorJF8-0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "630983934073-3jd6scr87114bh58823lvne5l3qvml79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
