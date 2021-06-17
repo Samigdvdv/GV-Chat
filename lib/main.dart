@@ -1,13 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gvchat/screens/choose_username_screen.dart';
+import 'package:gvchat/screens/group_detail_screen.dart';
+import 'package:gvchat/screens/profile_screen.dart';
 
-import '/screens/tab_screen.dart';
+import './screens/contacts_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/welcome_screen1.dart';
 import 'screens/welcome_screen2.dart';
 import './screens/chat_screen.dart';
+import './screens/new_group_screen.dart';
 
 import './theme.dart';
 
@@ -40,15 +44,20 @@ class MyApp extends StatelessWidget {
                         if (Navigator.of(ctx).canPop()) {
                           Navigator.of(ctx).pop();
                         }
-                        return TabScreen();
+                        return ContactsScreen();
                       }
                       return WelcomeScreen2();
                     },
                   ),
             routes: {
+              ChooseUsernameScreen.routeName: (ctx) => ChooseUsernameScreen(),
+              GroupDetailScreen.routeName: (ctx) => GroupDetailScreen(),
+              ProfileScreen.routeName: (ctx) => ProfileScreen(),
+              NewGroupScreen.routeName: (ctx) => NewGroupScreen(),
               LoginScreen.routeName: (ctx) => LoginScreen(),
               SignupScreen.routeName: (ctx) => SignupScreen(),
               ChatScreen.routeName: (ctx) => ChatScreen(),
+              ContactsScreen.routeName: (ctx) => ContactsScreen(),
             },
           );
         });

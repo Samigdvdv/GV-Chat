@@ -21,6 +21,14 @@ class _AuthFormState extends State<AuthForm> {
   final _auth = FirebaseAuth.instance;
   var _isLoading = false;
 
+  Future<bool> usernameCheck() async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: _username)
+        .get();
+    return result.docs.isEmpty;
+  }
+
   void _submitForm() async {
     try {
       setState(() {
@@ -49,6 +57,7 @@ class _AuthFormState extends State<AuthForm> {
             .collection('users')
             .doc(result.user!.uid)
             .set({
+          'uid': result.user!.uid,
           'username': _username.toLowerCase(),
           'email': _userEmail,
           'image': '',
@@ -80,12 +89,17 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
-  void _trySubmit() {
-    final isValid = _formKey.currentState!.validate();
+  void _trySubmit() async {
+    var isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (isValid) {
       _formKey.currentState!.save();
-      _submitForm();
+      isValid = await usernameCheck();
+      if (!isValid) {
+        widget.showErrorDialog('Username already exists');
+      } else {
+        _submitForm();
+      }
     }
   }
 
@@ -136,6 +150,9 @@ class _AuthFormState extends State<AuthForm> {
                 validator: (value) {
                   if (value!.isEmpty || value.length < 4) {
                     return 'Username must be atleast 4 characters long';
+                  }
+                  if (value.length > 15) {
+                    return 'Username must be atmost 15 characters long';
                   }
                   return null;
                 },

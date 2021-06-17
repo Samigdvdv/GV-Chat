@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gvchat/screens/contacts_screen.dart';
 
 import '../constants.dart';
-import '../widgets/search.dart';
+import '../widgets/search/search.dart';
 import './profile_screen.dart';
 
 class TabScreen extends StatefulWidget {
@@ -69,7 +69,9 @@ class _TabScreenState extends State<TabScreen> {
             ),
             IconButton(
                 onPressed: () {
-                  showSearch(context: context, delegate: SearchUser());
+                  showSearch(
+                      context: context,
+                      delegate: SearchUser(currentMembers: []));
                 },
                 icon: Icon(Icons.search)),
             PopupMenuButton(

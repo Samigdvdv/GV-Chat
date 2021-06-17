@@ -19,12 +19,13 @@ class PrimaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          minimumSize: Size(0.7 * width, 42),
-          primary: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+          minimumSize: Size(0.88 * width, 48),
+          primary: Color(0xFF141742),
           onPrimary: Theme.of(context).colorScheme.primary,
           textStyle: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-          )),
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 18,
+              fontWeight: FontWeight.w600)),
       icon: Icon(icon),
       label: Text(text),
     );

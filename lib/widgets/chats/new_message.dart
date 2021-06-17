@@ -1,10 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gvchat/constants.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+
+import '../../helpers/encrytion.dart';
 
 class NewMessage extends StatefulWidget {
   final String chatRoomId;
-  NewMessage(this.chatRoomId);
+  final bool isGroup;
+  NewMessage(this.chatRoomId, this.isGroup);
 
   @override
   _NewMessageState createState() => _NewMessageState();
@@ -16,26 +20,57 @@ class _NewMessageState extends State<NewMessage> {
 
   void _sendMessage() async {
     FocusScope.of(context).unfocus();
+    final user = FirebaseAuth.instance.currentUser;
     // final user = await FirebaseAuth.instance.currentUser();
     // final userData =
     //     await Firestore.instance.collection('users').document(user.uid).get();
-    await FirebaseFirestore.instance
-        .collection('chatroom')
-        .doc(widget.chatRoomId)
-        .collection('chats')
-        .add({
-      'message': _enteredMessage,
-      'sender': Constants.myUserName,
-      'createdAt': Timestamp.now(),
-    });
-    _controller.clear();
-    await FirebaseFirestore.instance
-        .collection('chatroom')
-        .doc(widget.chatRoomId)
-        .update({
-      'latestMessage': _enteredMessage,
-      'timestamp': Timestamp.now(),
-    });
+    var message = Encryption.encryptAES(_enteredMessage);
+    print("printing encrypted message here: $message");
+    print("printing encrypted message base64 here: ${message.base64}");
+    message = message is encrypt.Encrypted ? message.base64 : message;
+    if (!widget.isGroup) {
+      await FirebaseFirestore.instance
+          .collection('chatroom')
+          .doc(widget.chatRoomId)
+          .collection('chats')
+          .add({
+        'message': message,
+        'sender': user!.uid,
+        'createdAt': Timestamp.now(),
+        // 'read': false,
+      });
+      _controller.clear();
+      await FirebaseFirestore.instance
+          .collection('chatroom')
+          .doc(widget.chatRoomId)
+          .update({
+        'lastMessageBy': user.uid,
+        'latestMessage': message,
+        'timestamp': Timestamp.now(),
+        'unreadMessages': FieldValue.increment(1),
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('group')
+          .doc(widget.chatRoomId)
+          .collection('chats')
+          .add({
+        'message': message,
+        'sender': user!.uid,
+        'createdAt': Timestamp.now(),
+        // 'read': false,
+      });
+      _controller.clear();
+      await FirebaseFirestore.instance
+          .collection('group')
+          .doc(widget.chatRoomId)
+          .update({
+        'lastMessageBy': user.uid,
+        'latestMessage': message,
+        'timestamp': Timestamp.now(),
+        'unreadMessages': FieldValue.increment(1),
+      });
+    }
   }
 
   @override

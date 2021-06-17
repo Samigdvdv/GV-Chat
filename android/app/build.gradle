@@ -24,7 +24,6 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.google.gms.google-services'
 
 def keystoreProperties = new Properties()
    def keystorePropertiesFile = rootProject.file('key.properties')
@@ -36,6 +35,10 @@ android {
 
     lintOptions { 
         checkReleaseBuilds false
+    }
+
+    aaptOptions {
+        noCompress "tflite"
     }
 
 
@@ -80,4 +83,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.0.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.mlkit:smart-reply:16.1.1'
 }
+
+apply plugin: 'com.google.gms.google-services'
