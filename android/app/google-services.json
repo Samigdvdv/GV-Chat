@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "630983934073-mjjiuv65f187sreld3k89apmmq174krq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greetvilla.gvchat",
+            "certificate_hash": "4f575274cb5b343b78ab09191169aacbb8c7503d"
+          }
+        },
+        {
+          "client_id": "630983934073-qttqgpvrsa5348l9mickrkphdhsrfsbp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greetvilla.gvchat",
+            "certificate_hash": "9f93a3a77e8e9c08ecd20e3d28de385c7f517d5a"
+          }
+        },
+        {
+          "client_id": "630983934073-smjeaq9n25ic7jgk8dh3tncc7jnagadm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greetvilla.gvchat",
+            "certificate_hash": "9c9941d921b4fc15e52771c247b42d0b26ed1328"
+          }
+        },
+        {
           "client_id": "630983934073-3jd6scr87114bh58823lvne5l3qvml79.apps.googleusercontent.com",
           "client_type": 3
         }

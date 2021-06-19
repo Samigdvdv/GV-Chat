@@ -50,6 +50,7 @@ class _AuthFormState extends State<AuthForm> {
             email: _userEmail, password: _userPassword);
         print(result);
         final searchKeywords = [];
+        _username = _username.toLowerCase();
         for (int i = 0; i < _username.length; i++) {
           searchKeywords.add(_username.substring(0, i + 1));
         }

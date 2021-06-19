@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
-
 class MessageBubble extends StatelessWidget {
   final String message;
   final bool isMe;

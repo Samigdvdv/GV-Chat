@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<bool> usernameCheck() async {
     final result = await FirebaseFirestore.instance
         .collection('users')
-        .where('username', isEqualTo: username)
+        .where('username', isEqualTo: _enteredUsername)
         .get();
     return result.docs.isEmpty;
   }

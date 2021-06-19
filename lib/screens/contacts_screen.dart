@@ -90,7 +90,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("printing userId of currently logged in user : ${user!.uid}");
     return Scaffold(
       drawer: Theme(
         data: Theme.of(context).copyWith(
@@ -245,7 +244,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         width: MediaQuery.of(context).size.width,
                         child: Center(child: CircularProgressIndicator()));
                   }
-                  print("printing from stream builder");
                   final chatroomDocs = chatroomSnapshot.data!.docs;
                   return chatroomDocs.isEmpty
                       ? Container(
@@ -264,11 +262,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
                           itemCount: chatroomDocs.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            print("printing from list view builder");
-                            final String uid = chatroomDocs[index]['chatroomId']
+                            final String chatRoomId =
+                                chatroomDocs[index]['chatroomId'].toString();
+                            final String uid = chatRoomId
                                 .toString()
                                 .replaceAll('~', '')
                                 .replaceAll(user!.uid, '');
+
                             return FutureBuilder(
                                 future: FirebaseFirestore.instance
                                     .collection('users')
@@ -281,14 +281,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                       !snapshot.hasData) {
                                     return Container();
                                   }
-                                  print("printing from future builder");
                                   Map<String, dynamic>? data = snapshot.data!
                                       .data() as Map<String, dynamic>?;
-                                  final username = data!['username'];
-                                  final imageUrl = data['image'];
-                                  final String sender = chatroomDocs[index]
-                                          ['lastMessageBy']
-                                      .toString();
+                                  final username = data!['username'] ?? '';
+                                  final imageUrl = data['image'] ?? '';
+                                  if (chatroomDocs[index]['latestMessage']
+                                      .toString()
+                                      .isEmpty) {
+                                    return Container();
+                                  }
                                   final userId = user!.uid.toString();
                                   int unreadMessages =
                                       chatroomDocs[index]['unreadMessages'];
@@ -298,90 +299,79 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                               chatroomDocs[index]
                                                   ['latestMessage']));
                                   int l = latestMessage.length;
-                                  print(
-                                      "printing from future builder just before return statement");
-                                  return latestMessage.isEmpty
-                                      ? Container()
-                                      : Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              ListTile(
-                                                onTap: () {
-                                                  if (user!.uid != sender) {
-                                                    clearUnreadMessages(
-                                                        chatroomDocs[index]
-                                                            ['chatroomId']);
-                                                  }
-                                                  Navigator.of(context).pushNamed(
-                                                      ChatScreen.routeName,
-                                                      arguments: ScreenArguments(
-                                                          username: username,
-                                                          chatRoomId:
-                                                              chatroomDocs[
-                                                                      index][
-                                                                  'chatroomId'],
-                                                          imageUrl: imageUrl));
-                                                },
-                                                leading: CircleAvatar(
-                                                  radius: 25,
-                                                  backgroundImage:
-                                                      imageUrl.isEmpty
-                                                          ? AssetImage(
-                                                              'assets/images/person.png',
-                                                            )
-                                                          : NetworkImage(
-                                                              imageUrl,
-                                                            ) as ImageProvider,
-                                                ),
-                                                trailing: userId != sender
-                                                    ? UnreadMessages(
-                                                        sender,
-                                                        unreadMessages,
-                                                        chatroomDocs[index]
-                                                            ['timestamp'])
-                                                    : null,
-                                                title: Text(
-                                                  username,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                subtitle: user!.uid == sender &&
-                                                        l > 40
-                                                    ? Text(
-                                                        "You: ${latestMessage.substring(0, 40)}...",
-                                                        style: TextStyle(
-                                                            color: Colors.grey),
-                                                      )
-                                                    : (user!.uid == sender &&
-                                                            l <= 40
-                                                        ? Text(
-                                                            "You: $latestMessage",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .grey),
-                                                          )
-                                                        : (user!.uid !=
-                                                                    sender &&
-                                                                l <= 40
-                                                            ? Text(
-                                                                "$latestMessage",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                              )
-                                                            : Text(
-                                                                "${latestMessage.substring(0, 40)}...",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey)))),
-                                              ),
-                                              Divider(),
-                                            ],
+                                  final String sender = l > 0
+                                      ? chatroomDocs[index]['lastMessageBy']
+                                      : '';
+                                  return Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          onTap: () {
+                                            if (userId != sender) {
+                                              clearUnreadMessages(chatRoomId);
+                                            }
+                                            Navigator.of(context).pushNamed(
+                                                ChatScreen.routeName,
+                                                arguments: ScreenArguments(
+                                                    username: username,
+                                                    chatRoomId: chatRoomId,
+                                                    imageUrl: imageUrl));
+                                          },
+                                          leading: CircleAvatar(
+                                            radius: 25,
+                                            backgroundImage: imageUrl.isEmpty
+                                                ? AssetImage(
+                                                    'assets/images/person.png',
+                                                  )
+                                                : NetworkImage(
+                                                    imageUrl,
+                                                  ) as ImageProvider,
                                           ),
-                                        );
+                                          trailing: userId != sender
+                                              ? UnreadMessages(
+                                                  sender,
+                                                  unreadMessages,
+                                                  chatroomDocs[index]
+                                                      ['timestamp'])
+                                              : null,
+                                          title: Text(
+                                            username,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: user!.uid == sender &&
+                                                  l > 40
+                                              ? Text(
+                                                  "You: ${latestMessage.substring(0, 40)}...",
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
+                                                )
+                                              : (user!.uid == sender && l <= 40
+                                                  ? Text(
+                                                      "You: $latestMessage",
+                                                      style: TextStyle(
+                                                          color: Colors.grey),
+                                                    )
+                                                  : (user!.uid != sender &&
+                                                          l <= 40
+                                                      ? Text(
+                                                          "$latestMessage",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                        )
+                                                      : Text(
+                                                          "${latestMessage.substring(0, 40)}...",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .grey)))),
+                                        ),
+                                        Divider(),
+                                      ],
+                                    ),
+                                  );
                                 });
                           });
                 }),
