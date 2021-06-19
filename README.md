@@ -49,7 +49,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://play.google.com/store/apps/details?id=com.greetvilla.gvchat)
 
 GV Chat is chat app developed with flutter and firebase. It allows you to chat with users 1-on-1 or in groups. All the messages are secured with AES encryption algorithm. You can sign up with a unique username and email. You can also login with your google account and continue by adding your username. You can change your username anytime you want from your profile screen. You can also set your display picture which can again be changed whenever needed. You can create new group and add bunch of members with no restrictions. Group admin always has right to add new participant anytime, remove any existing member and even make any other member a admin of the group. This README.md file contains every detail about the project.
 
